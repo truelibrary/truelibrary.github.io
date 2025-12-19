@@ -1,4 +1,4 @@
-import { Container, Flex, Text, Divider } from "@mantine/core";
+import { Container, Flex, Text, Divider, Skeleton } from "@mantine/core";
 import PageTransition from "../animations/PageTransition";
 import classes from "./Home.module.css";
 import { useQuery } from "@tanstack/react-query";
@@ -6,6 +6,7 @@ import { sanityClient } from "../client";
 import type { Post } from "../types";
 import { Link } from "react-router";
 import Bismillah from "../assets/Bismillah_Calligraphy.svg";
+import { MultiplePlaceHolder } from "../components/MultiplePlaceHolder";
 
 const categories = [
   { title: "Islam", value: "islam" },
@@ -31,7 +32,7 @@ const fetchCategoryPosts = async () => {
 };
 
 function Home() {
-  const { data } = useQuery<Post[]>({
+  const { isLoading, data } = useQuery<Post[]>({
     queryKey: ["categoryPosts"],
     queryFn: fetchCategoryPosts,
   });
@@ -44,9 +45,15 @@ function Home() {
       </Flex>
       <Container size={"sm"}>
         {categories.map((category) => (
-          <div>
+          <div key={category.value}>
             <h2>{category.title}</h2>
             <Flex direction={"column"} gap={12}>
+              {isLoading && (
+                <MultiplePlaceHolder
+                  amount={6}
+                  placeHolder={<Skeleton height={32} />}
+                />
+              )}
               {data
                 ?.filter((post) => post.category === category.value)
                 .sort(

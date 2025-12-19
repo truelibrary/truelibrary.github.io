@@ -13,11 +13,12 @@ import { useQuery } from "@tanstack/react-query";
 import { sanityClient } from "../client";
 import { badges } from "../utils";
 import Pill from "../components/Pill";
-import { ArticleCard } from "../components/Card";
+import { ArticleCard, ArticleCardPlaceHolder } from "../components/Card";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import type { Post } from "../types";
 import PageTransition from "../animations/PageTransition";
+import { MultiplePlaceHolder } from "../components/MultiplePlaceHolder";
 
 const fetchNewPosts = async () => {
   const query = `*[_type == "post"] {
@@ -54,7 +55,7 @@ const fetchNewPosts = async () => {
 
 function Library() {
   const navigate = useNavigate();
-  const { data } = useQuery<Post[]>({
+  const { isLoading, data } = useQuery<Post[]>({
     queryKey: ["newPosts"],
     queryFn: fetchNewPosts,
   });
@@ -91,7 +92,6 @@ function Library() {
   return (
     <>
       <div>
-        {/* <BackgroundImage h={200} src={Azhar}> */}
         <Stack
           h={"100%"}
           className={classes.image__text}
@@ -106,7 +106,6 @@ function Library() {
             understanding.
           </Text>
         </Stack>
-        {/* </BackgroundImage> */}
       </div>
       <Container my="lg">
         <Autocomplete
@@ -140,6 +139,15 @@ function Library() {
           })}
         </Group>
         <Grid>
+          {isLoading && (
+            <MultiplePlaceHolder
+              placeHolder={
+                <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
+                  <ArticleCardPlaceHolder />
+                </Grid.Col>
+              }
+            />
+          )}
           {filteredPosts?.map((post) => (
             <Grid.Col key={post._id} span={{ base: 12, sm: 6, md: 4 }}>
               <ArticleCard

@@ -1,4 +1,12 @@
-import { Blockquote, Card, Flex, Group, Popover, Text } from "@mantine/core";
+import {
+  Blockquote,
+  Card,
+  Flex,
+  Group,
+  Popover,
+  Skeleton,
+  Text,
+} from "@mantine/core";
 import classes from "./Card.module.css";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { PortableTextDocument } from "../types";
@@ -221,4 +229,13 @@ const extractPlainText = (doc: PortableTextDocument): string => {
 
 const splitIntoSentences = (text: string): string[] => {
   return text.split(/(?<=[.!?؟]|[ۚۛۗۙ])\s+|\n+/g).filter(Boolean);
+};
+
+export const ArticleCardPlaceHolder = () => {
+  console.log("here!!!");
+  return (
+    <>
+      <Skeleton width={"100%"} height={260} />
+    </>
+  );
 };
