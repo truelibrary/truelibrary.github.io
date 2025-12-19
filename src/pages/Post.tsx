@@ -31,7 +31,8 @@ import {
   type AvatarMapper,
 } from "../assets/authorAvatars/mapper";
 import { Carousel } from "@mantine/carousel";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { useInViewport } from "../hooks/useInViewport";
 
 const fetchPost = async (slug: string) => {
   const query = `*[_type == "post" && slug.current == $slug][0]{
@@ -77,6 +78,8 @@ function PostPage() {
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
+  const ref = useRef(null);
+  const { isVisible } = useInViewport(ref);
 
   const { data, error, isPending, isError } = useQuery<Post>({
     queryKey: ["newPosts", slug],
@@ -123,33 +126,35 @@ function PostPage() {
         px={14}
         visibleFrom="md"
       >
-        <Stack w={320}>
-          <Text size="sm" ml={4} mt="sm" my="sm" c="dimmed">
-            Tags
-          </Text>
-          <Flex wrap="wrap" gap={4}>
-            {data.tags.map((tag) => (
-              <Pill key={tag} isSelectable={false}>
-                {badges.find((b) => b.value === tag)?.title}
-              </Pill>
-            ))}
-          </Flex>
-          <Stack>
+        {isVisible && (
+          <Stack w={320}>
             <Text size="sm" ml={4} mt="sm" my="sm" c="dimmed">
-              Author
+              Tags
             </Text>
-            <Flex align={"center"} gap={4}>
-              <Avatar
-                src={authorAvatarMap[data.author as keyof AvatarMapper]}
-                alt=""
-              />
-              <Text ml={4}>{data.author}</Text>
+            <Flex wrap="wrap" gap={4}>
+              {data.tags.map((tag) => (
+                <Pill key={tag} isSelectable={false}>
+                  {badges.find((b) => b.value === tag)?.title}
+                </Pill>
+              ))}
             </Flex>
+            <Stack>
+              <Text size="sm" ml={4} mt="sm" my="sm" c="dimmed">
+                Author
+              </Text>
+              <Flex align={"center"} gap={4}>
+                <Avatar
+                  src={authorAvatarMap[data.author as keyof AvatarMapper]}
+                  alt=""
+                />
+                <Text ml={4}>{data.author}</Text>
+              </Flex>
+            </Stack>
+            {!isMobile && tableOfContents}
           </Stack>
-          {!isMobile && tableOfContents}
-        </Stack>
+        )}
+        <div ref={ref} />
       </Group>
-
       <Flex direction="column" className={classes.content}>
         {isMobile && (
           <>
