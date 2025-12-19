@@ -121,41 +121,43 @@ function PostPage() {
     <Container display={!isMobile ? "flex" : ""} size="xl" pt={"sm"}>
       <Group
         gap={12}
-        className={classes.tags__wrapper}
+        className={`${classes.tags__wrapper} ${isVisible ? classes.sidebar__open : classes.sidebar__closed}`}
         pb={12}
         px={14}
         visibleFrom="md"
       >
-        {isVisible && (
-          <Stack w={320}>
+        <Stack className={classes.sidebar__inner}>
+          <Text size="sm" ml={4} mt="sm" my="sm" c="dimmed">
+            Tags
+          </Text>
+          <Flex wrap="wrap" gap={4}>
+            {data.tags.map((tag) => (
+              <Pill key={tag} isSelectable={false}>
+                {badges.find((b) => b.value === tag)?.title}
+              </Pill>
+            ))}
+          </Flex>
+          <Stack>
             <Text size="sm" ml={4} mt="sm" my="sm" c="dimmed">
-              Tags
+              Author
             </Text>
-            <Flex wrap="wrap" gap={4}>
-              {data.tags.map((tag) => (
-                <Pill key={tag} isSelectable={false}>
-                  {badges.find((b) => b.value === tag)?.title}
-                </Pill>
-              ))}
+            <Flex align={"center"} gap={4}>
+              <Avatar
+                src={authorAvatarMap[data.author as keyof AvatarMapper]}
+                alt=""
+              />
+              <Text ml={4}>{data.author}</Text>
             </Flex>
-            <Stack>
-              <Text size="sm" ml={4} mt="sm" my="sm" c="dimmed">
-                Author
-              </Text>
-              <Flex align={"center"} gap={4}>
-                <Avatar
-                  src={authorAvatarMap[data.author as keyof AvatarMapper]}
-                  alt=""
-                />
-                <Text ml={4}>{data.author}</Text>
-              </Flex>
-            </Stack>
-            {!isMobile && tableOfContents}
           </Stack>
-        )}
+          {!isMobile && tableOfContents}
+        </Stack>
+
         <div ref={ref} />
       </Group>
-      <Flex direction="column" className={classes.content}>
+      <Flex
+        direction="column"
+        className={`${classes.content} ${isVisible ? classes.content__narrow : classes.content__wide}`}
+      >
         {isMobile && (
           <>
             <Button onClick={openDrawer} variant="light" mb="md">

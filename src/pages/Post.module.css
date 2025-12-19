@@ -3,6 +3,7 @@
   background-color: var(--secondary-background);
   border-radius: 12px;
   padding: 24px;
+  transition: all 1s;
 }
 
 .youtube {
@@ -26,6 +27,44 @@
   height: fit-content;
 }
 
+.sidebar__open {
+  flex: 0 0 320px;
+  transition:
+    flex-basis 300ms ease,
+    opacity 200ms ease;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.sidebar__closed {
+  flex: 0 0 0px;
+  transition:
+    flex-basis 300ms ease,
+    opacity 200ms ease;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sidebar__inner {
+  width: 320px;
+}
+
+.content {
+  min-width: 0;
+  transition: flex-basis 300ms ease;
+}
+
+.content__narrow {
+  flex: 1 1 auto;
+  flex-basis: calc(100% - 320px);
+}
+
+.content__wide {
+  flex: 1 1 auto;
+  flex-basis: 100%;
+}
+
 .drawer__content {
   position: fixed;
   top: 0;
@@ -35,7 +74,7 @@
   max-width: 100vw;
   max-height: 100vh;
   border-radius: 0;
-  background-color: var(--mantine-color-body); /* optional */
+  background-color: var(--mantine-color-body);
 }
 
 .drawer__body {
