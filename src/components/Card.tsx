@@ -125,7 +125,7 @@ export function CardPills({ pills }: CardPillsProps) {
   const moreRef = useRef<HTMLDivElement | null>(null);
   const [visibleCount, setVisibleCount] = useState(pills.length);
   const [popoverOpened, setPopoverOpened] = useState(false);
-  const MAX_WIDTH = 260;
+  const MAX_WIDTH = 256;
 
   useEffect(() => {
     let total = 0;
